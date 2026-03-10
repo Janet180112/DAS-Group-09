@@ -1,0 +1,56 @@
+---
+title: "IMDB Film Rating Analysis"
+number-sections: true
+format: 
+  html:
+    embed-resources: true
+    code-tools: true
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: libraries
+
+library(tidyverse)
+library(gt)
+library(gridExtra)
+library(moderndive)
+```
+
+```{r}
+#| include: false # Hides this block from output
+#| label: load-happy-data
+happy24 <- read_csv(file = "https://das-stats5085.github.io/data/Task1-happy24.csv")
+```
+
+# Introduction {#sec-Intro}
+
+# Exploratory Data Analysis {#sec-EDA}
+
+# Formal Data Analysis {#sec-FDA}
+
+# Conclusions {#sec-Conc}
+
+\newpage
+# Task 2{-}
+
+
+```{r}
+#| include: false # Hides this block from output
+#| label: load-f1-data
+load(url("https://das-stats5085.github.io/data/Task2Data.RData"))
+```
+
+## Part a{-}
+
+## Part b{-}
+
+## Part c{-}
+
+## Part d{-}
+
+
