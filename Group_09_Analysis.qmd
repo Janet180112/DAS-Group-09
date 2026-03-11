@@ -1,0 +1,40 @@
+---
+title: "Investigating Factors That Influence High IMDB Film Ratings"
+number-sections: true
+format: 
+  html:
+    embed-resources: true
+    code-tools: true
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: libraries
+
+library(tidyverse)
+library(gt)
+library(gridExtra)
+library(moderndive)
+dataset09 <- read_csv("https://raw.githubusercontent.com/Janet180112/DAS-Group-09/main/dataset09.csv")
+```
+
+```{r}
+#| include: false # Hides this block from output
+#| label: load-happy-data
+
+```
+
+# Introduction {#sec-Intro}
+
+# Exploratory Data Analysis {#sec-EDA}
+
+# Formal Data Analysis {#sec-FDA}
+
+# Conclusions {#sec-Conc}
+
+
+
