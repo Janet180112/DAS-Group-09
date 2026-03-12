@@ -21,15 +21,26 @@ library(gridExtra)
 library(moderndive)
 dataset09 <- read_csv("https://raw.githubusercontent.com/Janet180112/DAS-Group-09/main/dataset09.csv")
 ```
+# Data Preparation {#sec-data-prep}
+Before starting the analysis, the dataset was checked for missing values. 
+The results show that the variable length has 127 missing values. 
+These rows were removed before the analysis.
 
 ```{r}
-#| include: false # Hides this block from output
-#| label: load-happy-data
+
+# Check missing values
+colSums(is.na(dataset09))
+
+# Remove rows with missing values
+dataset09 <- na.omit(dataset09)
+# Summary statistics
+str(dataset09)
 
 ```
 
 # Introduction {#sec-Intro}
-2222
+Movies are a common form of entertainment, and many people look at online ratings before choosing what to watch. IMDB is a well-known website where viewers rate films on a scale from 0 to 10. However, not all films receive high ratings, and different features of a film may influence how audiences rate them. In this project, we use an IMDB dataset to investigate which film characteristics affect whether a film receives a rating higher than 7.
+
 # Exploratory Data Analysis {#sec-EDA}
 
 # Formal Data Analysis {#sec-FDA}
