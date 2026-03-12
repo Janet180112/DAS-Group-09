@@ -33,6 +33,8 @@ colSums(is.na(dataset09))
 
 # Remove rows with missing values
 dataset09 <- na.omit(dataset09)
+# Convert genre to factor
+dataset09$genre <- as.factor(dataset09$genre)
 # Summary statistics
 str(dataset09)
 

@@ -2207,8 +2207,10 @@ vertical-align: -.125em;
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows with missing values</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dataset09 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(dataset09)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dataset09)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert genre to factor</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>dataset09<span class="sc">$</span>genre <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dataset09<span class="sc">$</span>genre)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dataset09)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [2,874 × 7] (S3: tbl_df/tbl/data.frame)
  $ film_id: num [1:2874] 45327 55943 7752 34995 21585 ...
@@ -2216,7 +2218,7 @@ vertical-align: -.125em;
  $ length : num [1:2874] 103 60 105 135 117 90 95 110 20 101 ...
  $ budget : num [1:2874] 14.4 10.2 13.4 11.6 17 10.7 14.7 14 12 13.4 ...
  $ votes  : num [1:2874] 17 11 3216 73 1988 ...
- $ genre  : chr [1:2874] &quot;Comedy&quot; &quot;Documentary&quot; &quot;Documentary&quot; &quot;Comedy&quot; ...
+ $ genre  : Factor w/ 7 levels &quot;Action&quot;,&quot;Animation&quot;,..: 3 4 4 3 1 1 3 5 3 3 ...
  $ rating : num [1:2874] 8 8.1 7.9 7.1 8 2.8 8.3 2.4 8.1 8.6 ...
  - attr(*, &quot;na.action&quot;)= &#39;omit&#39; Named int [1:127] 39 61 64 66 71 82 86 103 146 150 ...
   ..- attr(*, &quot;names&quot;)= chr [1:127] &quot;39&quot; &quot;61&quot; &quot;64&quot; &quot;66&quot; ...</code></pre>
@@ -2725,20 +2727,22 @@ vertical-align: -.125em;
 <span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows with missing values</span></span>
 <span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>dataset09 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(dataset09)</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dataset09)</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert genre to factor</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>dataset09<span class="sc">$</span>genre <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dataset09<span class="sc">$</span>genre)</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dataset09)</span>
 <span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduction {#sec-Intro}</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>Movies are a common form of entertainment, and many people look at online ratings before choosing what to watch. IMDB is a well-known website where viewers rate films on a scale from 0 to 10. However, not all films receive high ratings, and different features of a film may influence how audiences rate them. In this project, we use an IMDB dataset to investigate which film characteristics affect whether a film receives a rating higher than 7.</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="fu"># Exploratory Data Analysis {#sec-EDA}</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduction {#sec-Intro}</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>Movies are a common form of entertainment, and many people look at online ratings before choosing what to watch. IMDB is a well-known website where viewers rate films on a scale from 0 to 10. However, not all films receive high ratings, and different features of a film may influence how audiences rate them. In this project, we use an IMDB dataset to investigate which film characteristics affect whether a film receives a rating higher than 7.</span>
 <span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="fu"># Formal Data Analysis {#sec-FDA}</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="fu"># Exploratory Data Analysis {#sec-EDA}</span></span>
 <span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusions {#sec-Conc}</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># Formal Data Analysis {#sec-FDA}</span></span>
 <span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusions {#sec-Conc}</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
