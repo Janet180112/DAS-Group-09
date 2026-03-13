@@ -21,32 +21,292 @@ library(gridExtra)
 library(moderndive)
 dataset09 <- read_csv("https://raw.githubusercontent.com/Janet180112/DAS-Group-09/main/dataset09.csv")
 ```
-# Data Preparation {#sec-data-prep}
-Before starting the analysis, the dataset was checked for missing values. 
-The results show that the variable length has 127 missing values. 
-These rows were removed before the analysis.
 
-```{r}
-
-# Check missing values
-colSums(is.na(dataset09))
-
-# Remove rows with missing values
-dataset09 <- na.omit(dataset09)
-# Convert genre to factor
-dataset09$genre <- as.factor(dataset09$genre)
-# Summary statistics
-str(dataset09)
-
-```
 
 # Introduction {#sec-Intro}
 Movies are a common form of entertainment, and many people look at online ratings before choosing what to watch. IMDB is a well-known website where viewers rate films on a scale from 0 to 10. However, not all films receive high ratings, and different features of a film may influence how audiences rate them. In this project, we use an IMDB dataset to investigate which film characteristics affect whether a film receives a rating higher than 7.
 
 # Exploratory Data Analysis {#sec-EDA}
 
+## Data Overview
+
+The data used in this project is from the IMDb film database and contains information on a subset of films that have been released in cinemas. Each observation in the dataset corresponds to a single film. The data includes several variables describing different characteristics of the films.
+
+Specifically, the data contains the following variables: film_id, which represents the unique identifier of each film; year, indicating the year in which the film was released; length, representing the duration of the film in minutes; budget, which records the production budget of the film measured in millions of dollars; votes, indicating the number of positive votes received from viewers; genre, describing the category of the film (such as Comedy, Drama, Action, or Documentary); and rating, which is the IMDb rating score ranging from 0 to 10. We can see the first 10 rows from the data.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+film_raw <- dataset09
+#names(film_raw) # check names
+#summary(film_raw) # summary statistic
+film_raw <- film_raw %>%
+  mutate(
+    genre = as.factor(genre)
+  )
+head(film_raw, 5) # first 5 rows
+```
+
+## Missing values
+First, we check for missing values across all variables. From @tbl-film-miss, most variables contain no missing observations. The only variable with missing values is length, with 127 missing entries (4.23%). Given the relatively small proportion of missing data, these observations were removed before conducting further analysis.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: tbl-film-miss
+#| tbl-cap: Missing Values Summary
+# colSums(is.na(film_raw))
+
+missing_table <- data.frame(
+  variable = names(film_raw),
+  missing_count = colSums(is.na(film_raw)),
+  missing_percent = round(colSums(is.na(film_raw)) / nrow(film_raw) * 100, 2)
+)
+
+missing_table %>%
+  gt() %>%
+  cols_label(
+    variable = "Variable",
+    missing_count = "Missing Count",
+    missing_percent = "Missing (%)"
+  ) %>%
+  fmt_number(
+    columns = missing_percent,
+    decimals = 2
+  ) %>%
+  data_color(
+    columns = missing_count,
+    colors = scales::col_numeric(
+      palette = c("white", "red"),
+      domain = NULL
+    )
+  ) %>%
+  cols_align(
+    align = "center"
+  ) %>%
+  tab_header(
+    title = "Missing Values Summary"
+  ) %>%
+  tab_options(
+    table.border.top.color = "black",
+    table.border.bottom.color = "black",
+    column_labels.border.top.color = "black",
+    column_labels.border.bottom.color = "black",
+    table.font.size = 14
+  )
+```
+## Summary statistics of film variables
+Table @tbl-sum summarises the main numerical variables in the data. The films in the data were released between 1895 and 2005, with an average release year of approximately 1976, indicating that the sample spans a wide historical range of cinema productions. The average film length is about 81.57 minutes, with a median of 90 minutes.The standard deviation (39.54) is large. And the maximum value of 555 minutes suggest the presence of several unusually long films.
+
+The average budget of films is approximately 11.99 million dollars, which has small variation compared to other variables. It indicates that most films in the sample have similar production budgets. In contrast, the votes variable shows extremely high variability (3860.04). @fig-distribution suggests a highly right-skewed distribution where a small number of films receive very large numbers of votes.
+
+Finally, the average IMDb rating is 5.41, with a median of 4.70, indicating that most films in the data receive moderate ratings. The ratings range from 0.80 to 9.20, showing considerable variation in audience evaluations across films.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: tbl-sum
+#| tbl-cap: Descriptive Statistics of Film Variables
+film_raw <- film_raw %>% drop_na()
+desc_table <- film_raw %>%
+  summarise(
+    mean_year   = mean(year),
+    median_year = median(year),
+    sd_year     = sd(year),
+    min_year    = min(year),
+    max_year    = max(year),
+
+    mean_length   = mean(length),
+    median_length = median(length),
+    sd_length     = sd(length),
+    min_length    = min(length),
+    max_length    = max(length),
+
+    mean_budget   = mean(budget),
+    median_budget = median(budget),
+    sd_budget     = sd(budget),
+    min_budget    = min(budget),
+    max_budget    = max(budget),
+
+    mean_votes   = mean(votes),
+    median_votes = median(votes),
+    sd_votes     = sd(votes),
+    min_votes    = min(votes),
+    max_votes    = max(votes),
+
+    mean_rating   = mean(rating),
+    median_rating = median(rating),
+    sd_rating     = sd(rating),
+    min_rating    = min(rating),
+    max_rating    = max(rating)
+  ) %>%
+  pivot_longer(everything(),
+               names_to = "stat_variable",
+               values_to = "value") %>%
+  separate(stat_variable, into = c("stat", "variable")) %>%
+  pivot_wider(names_from = stat, values_from = value)
+
+desc_table %>%
+  gt() %>%
+  cols_label(
+    variable = "Variable",
+    mean = "Mean",
+    median = "Median",
+    sd = "SD",
+    min = "Min",
+    max = "Max"
+  ) %>%
+  fmt_number(
+    columns = c(mean, median, sd, min, max),
+    decimals = 2
+  ) %>%
+  tab_header(
+    title = "Descriptive Statistics of Film Variables"
+  ) %>%
+  tab_options(
+    table.border.top.color = "black",
+    table.border.bottom.color = "black",
+    column_labels.border.top.color = "black",
+    column_labels.border.bottom.color = "black",
+    table.font.size = 14
+  )
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-distribution
+#| fig-cap: Distribution of Film Variables
+film_raw %>%
+  select(year, length, budget, votes, rating) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 30, fill = "skyblue", color = "black") +
+  facet_wrap(~variable, scales = "free") +
+  labs(
+    title = "Distribution of Film Variables",
+    x = "",
+    y = "Count"
+  ) +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+@fig-gen shows the distribution of film genres. Drama and Action are the most common genres, each with the highest number of films, followed by Comedy. Animation and Documentary appear much less frequently, while Short films are relatively rare. Romance has the smallest number of observations. Overall, the distribution of genres is uneven, with most films concentrated in Drama, Action, and Comedy categories.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-gen
+#| fig-cap: Distribution of Film Genres
+ggplot(film_raw, aes(x = reorder(genre, -table(genre)[genre]))) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "Distribution of Film Genres",
+       x = "Genre", y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+## Summary statistics of film varaiables by rating category
+@tbl-rate indicates the summary statistics of film characteristics by rating category. Films with ratings greater than 7 have a slightly higher average budget (12.96) compared to films with ratings of 7 or below (11.46). However, films with lower ratings tend to have a longer average duration (95.83 minutes) than higher-rated films (55.14 minutes). In addition, films with ratings ≤ 7 receive more votes on average (798.13) than those with ratings \> 7 (389.49). The mean IMDb rating differs substantially between the two groups, with an average rating of 4.00 for the lower-rated films and 8.02 for the higher-rated films. The average release year is similar for both groups, indicating no strong difference in release period between the two rating categories.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: tbl-rate
+#| tbl-cap: The number of rate
+
+film <- film_raw %>% 
+  mutate( high_rating = ifelse(rating > 7, 1, 0), high_rating = factor(high_rating, levels = c(0, 1), labels = c("rating <= 7", "rating > 7")) )
+
+summary_table <- film %>%
+  group_by(high_rating) %>%
+  summarise(
+    n = n(),
+    mean_year = mean(year, na.rm = TRUE),
+    mean_length = mean(length, na.rm = TRUE),
+    mean_budget = mean(budget, na.rm = TRUE),
+    mean_votes = mean(votes, na.rm = TRUE),
+    mean_rating = mean(rating, na.rm = TRUE)
+  )
+
+summary_table %>%
+  gt() %>%
+  cols_label(
+    high_rating = "Rating category",
+    n = "Count",
+    mean_year = "Mean year",
+    mean_length = "Mean length",
+    mean_budget = "Mean budget",
+    mean_votes = "Mean votes",
+    mean_rating = "Mean rating"
+  ) %>%
+  fmt_number(
+    columns = c(mean_year, mean_length, mean_budget, mean_votes, mean_rating),
+    decimals = 2
+  ) %>%
+  tab_header(
+    title = md("**Summary Statistics by Rating Category**")
+  ) %>%
+  cols_align(align = "center") %>%
+  tab_options(
+    table.border.top.color = "black",
+    table.border.bottom.color = "black",
+    column_labels.border.top.color = "black",
+    column_labels.border.bottom.color = "black",
+    table.font.size = 14
+  )
+```
+
+@fig-boxplot compare the distributions of several film characteristics across the two rating categories. Films with ratings greater than 7 tend to have slightly higher budgets on average compared to those with ratings of 7 or below. In contrast, lower-rated films generally have longer durations. The variable votes was log-transformed due to its highly right-skewed distribution, which helps reduce the influence of extreme values and makes the distribution easier to interpret. After the transformation, the distributions of log-transformed votes appear relatively similar across the two groups. The time period of film release does not differ substantially between two rated films.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-boxplot
+#| fig-cap: Distribution of Film Features by Rating Category
+film <- film %>%
+  mutate(log_votes = log(votes + 1))
+
+film %>%
+  select(high_rating, year, length, budget, log_votes) %>%
+  pivot_longer(
+    cols = -high_rating,
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  ggplot(aes(x = high_rating, y = value, fill = high_rating)) +
+  geom_boxplot(alpha = 0.7) +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Distribution of Film Features by Rating Category",
+    x = "Rating category",
+    y = "Value"
+  ) +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "none"
+  )
+```
+
 # Formal Data Analysis {#sec-FDA}
 
 # Conclusions {#sec-Conc}
-
-
