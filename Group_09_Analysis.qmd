@@ -308,7 +308,7 @@ film %>%
 ```
 
 # Formal Data Analysis {#sec-FDA}
-To investigate which film characteristics influence whether a film receives an IMDb rating greater than 7, we use a Generalised Linear Model (GLM) with a binomial distribution. Because the response variable has two categories (rating > 7 and rating ≤ 7), logistic regression is an appropriate modelling approach.
+To investigate which film characteristics influence whether a film receives an IMDB rating greater than 7, we use a Generalised Linear Model (GLM) with a binomial distribution. Because the response variable has two categories (rating > 7 and rating ≤ 7), logistic regression is an appropriate modelling approach.
 The response variable in this model is high_rating, which equals 1 if the rating is greater than 7 and 0 otherwise.
 The explanatory variables included in the model are:
 - year (release year of the film)
@@ -326,7 +326,23 @@ glm_model <- glm(
   data = film,
   family = binomial
 )
-summary(glm_model)
+library(broom)
+tidy(glm_model) %>%
+  gt() %>%
+  cols_label(
+    term = "Variable",
+    estimate = "Estimate",
+    std.error = "Std Error",
+    statistic = "z value",
+    p.value = "p-value"
+  ) %>%
+  fmt_number(
+    columns = c(estimate, std.error, statistic, p.value),
+    decimals = 3
+  ) %>%
+  tab_options(
+    table.font.size = 14
+  )
 ```
 The variables budget and year have positive and significant effects, suggesting that films with larger budgets and more recent release years are more likely to receive ratings above 7. In contrast, length has a significant negative effect, indicating that longer films are less likely to receive high ratings.
 In addition, film genre plays an important role, with genres such as Comedy, Documentary, and Short films showing a higher probability of receiving ratings above 7, while Drama shows a negative relationship. The variable log_votes is not statistically significant in the model.
@@ -334,34 +350,59 @@ In addition, film genre plays an important role, with genres such as Comedy, Doc
 ## Odds ratios
 ```{r}
 #| echo: false
+#| label: tbl-odds
+#| tbl-cap: Odds Ratios from Logistic Regression
+
 odds_ratio <- exp(coef(glm_model))
-odds_ratio
+
+odds_table <- data.frame(
+  Variable = names(odds_ratio),
+  Odds_Ratio = odds_ratio
+)
+
+odds_table %>%
+  gt() %>%
+  fmt_number(
+    columns = Odds_Ratio,
+    decimals = 3
+  ) %>%
+  tab_options(
+    table.font.size = 14
+  )
 ```
 An odds ratio greater than 1 indicates an increase in the odds of receiving a high rating, while a value less than 1 indicates a decrease. The odds ratio for budget (1.68) indicates that films with larger budgets have higher odds of receiving high ratings. The odds ratio for length (0.94) is less than 1, suggesting that longer films are less likely to receive ratings above 7.
 In addition, some genres such as Comedy, Documentary, and Short films have much larger odds ratios, meaning films in these genres are more likely to receive high ratings compared with the reference genre.
 
 ## Model prediction
 ```{r}
-film$predicted_prob <- predict(glm_model, type = "response")
+#| echo: false
+#| warning: false
+#| message: false
+#| label: tbl-confusion
+#| tbl-cap: Confusion Matrix
 
-film$predicted_class <- ifelse(film$predicted_prob > 0.5,
-                               "rating > 7",
-                               "rating <= 7")
+film <- film %>%
+  mutate(
+    predicted_prob = predict(glm_model, type = "response"),
+    predicted_class = ifelse(predicted_prob > 0.5,
+                             "rating > 7",
+                             "rating <= 7")
+  )
 
-table(Predicted = film$predicted_class,
-      Actual = film$high_rating)
+conf_matrix <- table(
+  Predicted = film$predicted_class,
+  Actual = film$high_rating
+)
+
+as.data.frame.matrix(conf_matrix) %>%
+  rownames_to_column("Predicted") %>%
+  gt() %>%
+  tab_options(
+    table.font.size = 14
+  )
 ```
 The model correctly classified 1733 films with ratings ≤ 7 and 837 films with ratings > 7. However, 170 films with high ratings were predicted as low ratings, and 134 films with low ratings were predicted as high ratings.
 Overall, this suggests that the model performs reasonably well in distinguishing between films with ratings above and below 7.
-
-## Model accuracy
-```{r}
-#| echo: false
-accuracy <- mean(film$predicted_class == film$high_rating)
-accuracy
-```
-The model achieves an accuracy of 0.894, meaning that approximately 89.4% of films are correctly classified into the two rating categories (rating ≤ 7 and rating > 7). This indicates that the logistic regression model performs well in predicting whether a film receives a rating greater than 7.
-
 
 # Conclusions {#sec-Conc}
 This study investigated which film characteristics influence whether a film receives an IMDb rating greater than 7. Using a Generalised Linear Model (GLM), we examined the effects of several variables including release year, film length, budget, number of votes, and genre.
