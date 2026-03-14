@@ -313,5 +313,62 @@ film %>%
 ```
 
 # Formal Data Analysis {#sec-FDA}
+To investigate which film characteristics influence whether a film receives an IMDb rating greater than 7, we use a Generalised Linear Model (GLM) with a binomial distribution. Because the response variable has two categories (rating > 7 and rating ≤ 7), logistic regression is an appropriate modelling approach.
+The response variable in this model is high_rating, which equals 1 if the rating is greater than 7 and 0 otherwise.
+The explanatory variables included in the model are:
+- year (release year of the film)
+- length (film duration in minutes)
+- budget (production budget)
+- log_votes (log-transformed number of votes)
+- genre (film genre)
+The logistic regression model estimates how these variables affect the probability that a film receives a rating greater than 7.
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+glm_model <- glm(
+  high_rating ~ year + length + budget + log_votes + genre,
+  data = film,
+  family = binomial
+)
+summary(glm_model)
+```
+The variables budget and year have positive and significant effects, suggesting that films with larger budgets and more recent release years are more likely to receive ratings above 7. In contrast, length has a significant negative effect, indicating that longer films are less likely to receive high ratings.
+In addition, film genre plays an important role, with genres such as Comedy, Documentary, and Short films showing a higher probability of receiving ratings above 7, while Drama shows a negative relationship. The variable log_votes is not statistically significant in the model.
+
+## Odds ratios
+```{r}
+#| echo: false
+odds_ratio <- exp(coef(glm_model))
+odds_ratio
+```
+An odds ratio greater than 1 indicates an increase in the odds of receiving a high rating, while a value less than 1 indicates a decrease. The odds ratio for budget (1.68) indicates that films with larger budgets have higher odds of receiving high ratings. The odds ratio for length (0.94) is less than 1, suggesting that longer films are less likely to receive ratings above 7.
+In addition, some genres such as Comedy, Documentary, and Short films have much larger odds ratios, meaning films in these genres are more likely to receive high ratings compared with the reference genre.
+
+## Model prediction
+```{r}
+film$predicted_prob <- predict(glm_model, type = "response")
+
+film$predicted_class <- ifelse(film$predicted_prob > 0.5,
+                               "rating > 7",
+                               "rating <= 7")
+
+table(Predicted = film$predicted_class,
+      Actual = film$high_rating)
+```
+The model correctly classified 1733 films with ratings ≤ 7 and 837 films with ratings > 7. However, 170 films with high ratings were predicted as low ratings, and 134 films with low ratings were predicted as high ratings.
+Overall, this suggests that the model performs reasonably well in distinguishing between films with ratings above and below 7.
+
+## Model accuracy
+```{r}
+#| echo: false
+accuracy <- mean(film$predicted_class == film$high_rating)
+accuracy
+```
+The model achieves an accuracy of 0.894, meaning that approximately 89.4% of films are correctly classified into the two rating categories (rating ≤ 7 and rating > 7). This indicates that the logistic regression model performs well in predicting whether a film receives a rating greater than 7.
+
 
 # Conclusions {#sec-Conc}
+This study investigated which film characteristics influence whether a film receives an IMDb rating greater than 7. Using a Generalised Linear Model (GLM), we examined the effects of several variables including release year, film length, budget, number of votes, and genre.
+The results show that budget, film length, release year, and genre are important factors associated with high IMDb ratings. Films with larger budgets and more recent release years are more likely to receive ratings above 7, while longer films are less likely to receive high ratings. In addition, some genres such as Comedy, Documentary, and Short films show a higher probability of receiving high ratings compared with other genres.
+The prediction results from the confusion matrix also indicate that the model performs reasonably well in distinguishing between films with ratings above and below 7. Overall, the analysis suggests that both film characteristics and genre play an important role in determining whether a film receives a high IMDb rating.
