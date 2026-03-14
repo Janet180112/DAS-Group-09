@@ -321,6 +321,8 @@ The logistic regression model estimates how these variables affect the probabili
 #| echo: false
 #| warning: false
 #| message: false
+#| label: tbl-sum
+#| tbl-cap: Descriptive Statistics of Film Variables
 glm_model <- glm(
   high_rating ~ year + length + budget + log_votes + genre,
   data = film,
