@@ -22,8 +22,8 @@ library(moderndive)
 dataset09 <- read_csv("https://raw.githubusercontent.com/Janet180112/DAS-Group-09/main/dataset09.csv")
 ```
 
-# Introduction {#sec-Intro}
 
+# Introduction {#sec-Intro}
 Movies are a common form of entertainment, and many people look at online ratings before choosing what to watch. IMDB is a well-known website where viewers rate films on a scale from 0 to 10. However, not all films receive high ratings, and different features of a film may influence how audiences rate them. In this project, we use an IMDB dataset to investigate which film characteristics affect whether a film receives a rating higher than 7.
 
 # Exploratory Data Analysis {#sec-EDA}
@@ -49,7 +49,6 @@ head(film_raw, 5) # first 5 rows
 ```
 
 ## Missing values
-
 First, we check for missing values across all variables. From @tbl-film-miss, most variables contain no missing observations. The only variable with missing values is length, with 127 missing entries (4.23%). Given the relatively small proportion of missing data, these observations were removed before conducting further analysis.
 
 ```{r}
@@ -98,9 +97,7 @@ missing_table %>%
     table.font.size = 14
   )
 ```
-
 ## Summary statistics of film variables
-
 Table @tbl-sum summarises the main numerical variables in the data. The films in the data were released between 1895 and 2005, with an average release year of approximately 1976, indicating that the sample spans a wide historical range of cinema productions. The average film length is about 81.57 minutes, with a median of 90 minutes.The standard deviation (39.54) is large. And the maximum value of 555 minutes suggest the presence of several unusually long films.
 
 The average budget of films is approximately 11.99 million dollars, which has small variation compared to other variables. It indicates that most films in the sample have similar production budgets. In contrast, the votes variable shows extremely high variability (3860.04). @fig-distribution suggests a highly right-skewed distribution where a small number of films receive very large numbers of votes.
@@ -225,9 +222,7 @@ ggplot(film_raw, aes(x = reorder(genre, -table(genre)[genre]))) +
   )
 
 ```
-
 ## Summary statistics of film varaiables by rating category
-
 @tbl-rate indicates the summary statistics of film characteristics by rating category. Films with ratings greater than 7 have a slightly higher average budget (12.95) compared to films with ratings of 7 or below (11.47). However, films with lower ratings tend to have a longer average duration (95.83 minutes) than higher-rated films (55.14 minutes). In addition, films with ratings ≤ 7 receive more votes on average (827.35) than those with ratings \> 7 (399.92). The mean IMDb rating differs substantially between the two groups, with an average rating of 3.99 for the lower-rated films and 8.03 for the higher-rated films. The average release year is similar for both groups, indicating no strong difference in release period between the two rating categories.
 
 ```{r}
@@ -279,7 +274,7 @@ summary_table %>%
   )
 ```
 
-@fig-boxplot compare the distributions of several film characteristics across the two rating categories. Films with ratings greater than 7 tend to have slightly higher budgets on average compared to those with ratings of 7 or below. In contrast, lower-rated films generally have longer durations. The variable votes was log-transformed due to its highly right-skewed distribution, which helps reduce the influence of extreme values and makes the distribution easier to interpret. After the transformation, the distributions of log-transformed votes appear relatively similar across the two groups. The time period of film release does not differ substantially between two rated films.
+@fig-boxplot compare the distributions of several film characteristics across the two rating categories. Films with ratings greater than 7 tend to have slightly higher budgets on average compared to those with ratings of 7 or below. In contrast, lower-rated films generally have longer durations. The variable votes was log-transformed due to its highly right-skewed distribution, which helps reduce the influence of extreme values and makes the distribution easier to interpret. After the transformation, the distributions of log-transformed votes appear that films with ratings ≤ 7 receive more votes on average than those with ratings > 7. The time period of film release does not differ substantially between two rated films.
 
 ```{r}
 #| echo: false
