@@ -30,7 +30,7 @@ Movies are a common form of entertainment, and many people look at online rating
 
 ## Data Overview
 
-The data used in this project is from the IMDb film database and contains information on a subset of films that have been released in cinemas. Each observation in the data corresponds to a single film. The data includes several variables describing different characteristics of the films. From @tbl-film-preview, we can see first 5 rows from the data.
+The data used in this project is from the IMDB film database and contains information on a subset of films that have been released in cinemas. Each observation in the data corresponds to a single film. The data includes several variables describing different characteristics of the films. From @tbl-film-preview, we can see first 5 rows from the data.
 
 Specifically, the data contains the following variables: film_id, which represents the unique identifier of each film; year, indicating the year in which the film was released; length, representing the duration of the film in minutes; budget, which records the production budget of the film measured in millions of dollars; votes, indicating the number of positive votes received from viewers; genre, describing the category of the film (such as Comedy, Drama, Action, or Documentary); and rating, which is the IMDb rating score ranging from 0 to 10. We can see the first 5 rows from the data.
 
