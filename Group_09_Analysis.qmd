@@ -52,7 +52,7 @@ film_raw %>%
 ```
 
 ## Missing values
-We checked for missing values across all variables. From @tbl-film-miss, most variables contain no missing observations. The only variable with missing values is length, with 127 missing entries (4.23%). Given the relatively small proportion of missing data, these observations were removed before conducting further analysis.
+We check for missing values across all variables. From @tbl-film-miss, most variables contain no missing observations. The only variable with missing values is length, with 127 missing entries (4.23%). Given the relatively small proportion of missing data, these observations were removed before conducting further analysis.
 
 ```{r}
 #| echo: false
