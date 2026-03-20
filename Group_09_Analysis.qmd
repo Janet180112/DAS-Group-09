@@ -304,6 +304,13 @@ film %>%
 
 # Formal Data Analysis {#sec-FDA}
 To investigate which film characteristics influence whether a film receives an IMDB rating greater than 7, we use a Generalised Linear Model (GLM) with a binomial distribution. Because the response variable has two categories (rating > 7 and rating ≤ 7), logistic regression is an appropriate modelling approach.
+$$
+\begin{align}
+\log\left(\frac{P(\text{high\_rating}=1)}{1 - P(\text{high\_rating}=1)}\right)
+&= \beta_0 + \beta_1 \cdot year + \beta_2 \cdot length \\
+&\quad + \beta_3 \cdot budget + \beta_4 \cdot \text{log\_votes} + \beta_5 \cdot genre
+\end{align}
+$$
 The response variable in this model is high_rating, which equals 1 if the rating is greater than 7 and 0 otherwise.
 The explanatory variables included in the model are:
 - year (release year of the film)
