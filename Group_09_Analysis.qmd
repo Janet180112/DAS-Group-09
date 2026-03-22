@@ -376,7 +376,7 @@ odds_table %>%
 ```
 An odds ratio greater than 1 indicates an increase in the odds of receiving a high rating, while a value less than 1 indicates a decrease. The odds ratio for budget (1.68) indicates that films with larger budgets have higher odds of receiving high ratings. The odds ratio for length (0.94) is less than 1, suggesting that longer films are less likely to receive ratings above 7.
 In addition, some genres such as Comedy, Documentary, and Short films have much larger odds ratios, meaning films in these genres are more likely to receive high ratings compared with the reference genre.
-
+Some genres such as Documentary, Comedy, and Short films show extremely large odds ratios. This is likely due to the relatively small number of films in these categories combined with a high proportion of high-rated films, which leads to unstable and inflated estimates in the logistic regression model.
 ## Model prediction
 ```{r}
 #| echo: false
